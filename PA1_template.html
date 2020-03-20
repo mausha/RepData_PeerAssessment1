@@ -436,11 +436,11 @@ imputing missing data on the estimates of the total daily number of steps? -->
 <pre class="r"><code>totalMissingVales &lt;- sum(is.na(activity$steps))
 print(totalMissingVales)</code></pre>
 <pre><code>## [1] 2304</code></pre>
+<p>Missing step values will be imputed, using the average steps for that interval.</p>
 <pre class="r"><code>imputedMissingSteps &lt;- merge(activity, activityByInterval) %&gt;%
                        mutate(steps=if_else(is.na(steps), 
                                             as.integer(average_steps), steps)) %&gt;%
                        select(-average_steps) %&gt;% arrange(date, interval)
-
 
 newActivityByDate &lt;- select(imputedMissingSteps, -interval) %&gt;%
                   group_by(date) %&gt;%
@@ -462,7 +462,7 @@ print(newMedianSteps)</code></pre>
 <p>The difference of the median with and without imputed values:</p>
 <pre class="r"><code>print(newMedianSteps - medianSteps)</code></pre>
 <pre><code>## [1] 246</code></pre>
-<p>Missing step values were imputed using the average steps for that time interval. The result of using imputed values was to decrease the number of days with zero steps and increase the overall mean and median steps per day.</p>
+<p>Missing step values were imputed using the average steps for that time interval and the result of using imputed values was to decrease the number of days with zero steps and increase the overall mean and median steps per day.</p>
 </div>
 <div id="are-there-differences-in-activity-patterns-between-weekdays-and-weekends" class="section level2">
 <h2>Are there differences in activity patterns between weekdays and weekends?</h2>

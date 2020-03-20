@@ -123,13 +123,13 @@ print(totalMissingVales)
 ```
 ## [1] 2304
 ```
+Missing step values will be imputed, using the average steps for that interval.
 
 ```r
 imputedMissingSteps <- merge(activity, activityByInterval) %>%
                        mutate(steps=if_else(is.na(steps), 
                                             as.integer(average_steps), steps)) %>%
                        select(-average_steps) %>% arrange(date, interval)
-
 
 newActivityByDate <- select(imputedMissingSteps, -interval) %>%
                   group_by(date) %>%
@@ -138,7 +138,7 @@ qplot(newActivityByDate$steps, geom="histogram", binwidth=500,
       xlab="Total Daily Steps", main="Step Activity Histogram (Imputed Missing Values)")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
+![](PA1_template_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
 
 The mean of the total number of steps taken per day (with imputed missing values) is: 
 
@@ -182,9 +182,9 @@ print(newMedianSteps - medianSteps)
 ## [1] 246
 ```
 
-Missing step values were imputed using the average steps for that time interval.
-The result of using imputed values was to decrease the number of days with zero 
-steps and increase the overall mean and median steps per day.
+Missing step values were imputed using the average steps for that time interval
+and the result of using imputed values was to decrease the number of days with 
+zero steps and increase the overall mean and median steps per day.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 <!-- Use the dataset with the filled-in missing values for this part. Create a
@@ -210,7 +210,7 @@ ggplot(activityByDayAndInterval, aes(x=interval, y=average_steps)) + geom_line()
        facet_grid(rows = vars(day))
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
+![](PA1_template_files/figure-html/unnamed-chunk-15-1.png)<!-- -->
 
 The average activity patterns differ between weekdays and Weekends:
 
