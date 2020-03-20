@@ -132,19 +132,33 @@ The result of using imputed values was to decrease the number of days with zero
 steps and increase the overall mean and median steps per day.
 
 ## Are there differences in activity patterns between weekdays and weekends?
-<!-- For this part the weekdays() function may be of some help here. Use the
-dataset with the filled-in missing values for this part. Create a new factor
-variable in the dataset with two levels – “weekday” and “weekend” indicating
-whether a given date is a weekday or weekend day. Make a panel plot containing a
-time series plot (i.e. type="l") of the 5-minute interval (x-axis) and the
-average number of steps taken, averaged across all weekday days or weekend days
-(y-axis). See the README file in the GitHub repository to see an example of what
-this plot should look like using simulated data. -->
+<!-- Use the dataset with the filled-in missing values for this part. Create a
+new factor variable in the dataset with two levels – “weekday” and “weekend”
+indicating whether a given date is a weekday or weekend day. Make a panel plot
+containing a time series plot (i.e. type="l") of the 5-minute interval (x-axis)
+and the average number of steps taken, averaged across all weekday days or
+weekend days (y-axis). See the README file in the GitHub repository to see an
+example of what this plot should look like using simulated data. -->
 ```{r echo=TRUE}
 activityWithWeekdays <- mutate(imputedMissingSteps, 
                                day=as.factor(if_else(wday(date) == 1 | 
-                                                       wday(date) == 7, 
+                                                     wday(date) == 7, 
                                                      "weekend", "weekday")))
-print(activityWithWeekdays)
+activityByDayAndInterval <- select(activityWithWeekdays, -date) %>%
+                      group_by(day, interval) %>%
+                      summarize(average_steps=mean(steps))
 
+ggplot(activityByDayAndInterval, aes(x=interval, y=average_steps)) + geom_line() + 
+       labs(x="Daily 5-Minute Interval", y="Average Steps", 
+            title="Average Daily Activity By Interval (Weekdays vs Weekends)") +
+       facet_grid(rows = vars(day))
 ```
+
+The average activity patterns differ between weekdays and Weekends:
+
+* The most active period on weekdays is 5AM-10AM
+
+* On weekends activity starts later and is spread more evenly across the days
+
+* On weekends the most activity occurs in the 7:30AM-7:00PM interval
+
